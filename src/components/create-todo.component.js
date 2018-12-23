@@ -102,16 +102,21 @@ export default class CreateToDo extends Component {
                             className="form-check-input"
                             name="priorityOptions"
                             id="priorityHigh"
-                            value="Low"
+                            value="High"
                             checked={this.state.todo_priority === 'High'}
                             onChange={this.onChangeTodoPriority} />
                         <label className="form-check-label">
                             High
                         </label>
                     </div>
-
+                    <div className="form-group">
+                        <input
+                            type="submit"
+                            value="create todo"
+                            className="btn btn-primary"
+                        />
+                    </div>
                 </form>
-
             </div>
         )
     }
