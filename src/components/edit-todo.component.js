@@ -49,7 +49,6 @@ export default class EditToDo extends Component {
         console.log(`Todo Priority: ${this.state.todo_priority}`);
         console.log(`Todo Completed: ${this.state.todo_completed}`);
 
-        ///todos/update/5c1f45eb43fd2a6734752017
         fetch(`http://localhost:4000/todos/update/${this.props.match.params.id}`, {
             method: 'post',
             body: JSON.stringify(this.state),
