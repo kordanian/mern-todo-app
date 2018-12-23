@@ -15,7 +15,6 @@ export default class ToDosList extends Component {
                 let x = data;
                 this.setState({ data })
                 console.log(this.state.data);
-
             });
     }
 
@@ -28,20 +27,19 @@ export default class ToDosList extends Component {
                         this.state.data.map(function (item, i) {
                             console.log('test');
                             return <li key={i}>
-                            <a href={'/edit/' + item._id} >
-                                <h5>                                    
-                                    {item.todo_description}                                   
-                                </h5>
-                            </a>
-                            id: { item._id }
-                            <br />
-                            Responsible: { item.todo_responsible }
-                            <br />
-                            Priority: { item.todo_priority } <br />
-                            Completed: { item.todo_completed.toString() } <br />
+                                <a href={'/edit/' + item._id} >
+                                    {item.todo_description}
+                                </a>
+                                <br />
+                                id: {item._id}
+                                <br />
+                                Responsible: {item.todo_responsible}
+                                <br />
+                                Priority: {item.todo_priority} <br />
+                                Completed: {item.todo_completed.toString()} <br />
                             </li>
-                })
-            }
+                        })
+                    }
                 </ul>
             </div>
         )
