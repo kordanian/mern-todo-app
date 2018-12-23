@@ -8,7 +8,7 @@ export default class CreateToDo extends Component {
         this.onChangeTodoDescription = this.onChangeTodoDescription.bind(this);
         this.onChangeTodoResponsible = this.onChangeTodoResponsible.bind(this);
         this.onChangeTodoPriority = this.onChangeTodoPriority.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+        //this.onSubmit = this.onSubmit.bind(this);
 
         this.state = ({
             todo_description: '',
@@ -36,13 +36,24 @@ export default class CreateToDo extends Component {
         })
     }
 
-    onSubmit(e) {
+    onSubmit = (e) => {
         e.preventDefault();
         console.log(`Form submitted:`);
         console.log(`Todo Description: ${this.state.todo_description}`);
         console.log(`Todo Responsible: ${this.state.todo_responsible}`);
         console.log(`Todo Priority: ${this.state.todo_priority}`);
         console.log(`Todo Completed: ${this.state.todo_completed}`);
+        fetch('http://localhost:4000/todos')
+        .then((res) => {
+            return res.json();
+        })
+        .then((data) => {
+            console.log(data[0].todo_description);
+            return data;
+        })
+        
+          
+
         this.setState({
             todo_description: '',
             todo_responsible: '',
@@ -50,6 +61,7 @@ export default class CreateToDo extends Component {
             todo_completed: false
         })
     }
+
     render() {
         return (
             <div style={{ marginTop: 20 }}>
