@@ -43,17 +43,19 @@ export default class CreateToDo extends Component {
         console.log(`Todo Responsible: ${this.state.todo_responsible}`);
         console.log(`Todo Priority: ${this.state.todo_priority}`);
         console.log(`Todo Completed: ${this.state.todo_completed}`);
-        fetch('http://localhost:4000/todos')
-        .then((res) => {
-            return res.json();
-        })
-        .then((data) => {
-            console.log(data[0].todo_description);
-            return data;
-        })
-        
-          
 
+        fetch('http://localhost:4000/todos/add', {
+            method: 'post',
+            body: JSON.stringify(this.state),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            console.log(data);
+        });
         this.setState({
             todo_description: '',
             todo_responsible: '',
