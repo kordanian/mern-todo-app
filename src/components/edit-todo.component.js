@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 export default class EditToDo extends Component {
     constructor(props) {
@@ -8,7 +9,8 @@ export default class EditToDo extends Component {
             todo_description: '',
             todo_responsible: '',
             todo_priority: '',
-            todo_completed: false
+            todo_completed: false,
+            isUpdated: false
         }
         fetch(`http://localhost:4000/todos/${props.match.params.id}`)
             .then(response => response.json())
@@ -58,12 +60,18 @@ export default class EditToDo extends Component {
             }
         }).then(function (response) {
             return response.json();
-        }).then(function (data) {
+        }).then((data) => {
             console.log(data);
+            this.setState({
+                isUpdated: true
+            })
         });
     }
 
     render() {
+        if (this.state.isUpdated === true) {
+            return <Redirect to='/' />
+        }
         return (
             <div style={{ marginTop: 20 }}>
                 <h3>Update Todo</h3>

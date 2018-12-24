@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 export default class CreateToDo extends Component {
 
@@ -13,7 +14,8 @@ export default class CreateToDo extends Component {
             todo_description: '',
             todo_responsible: '',
             todo_priority: '',
-            todo_completed: false
+            todo_completed: false,
+            isUpdated: false
         })
     }
 
@@ -52,8 +54,11 @@ export default class CreateToDo extends Component {
             }
         }).then(function (response) {
             return response.json();
-        }).then(function (data) {
+        }).then((data) => {
             console.log(data);
+            this.setState({
+                isUpdated: true
+            })
         });
         this.setState({
             todo_description: '',
@@ -64,6 +69,9 @@ export default class CreateToDo extends Component {
     }
 
     render() {
+        if (this.state.isUpdated === true) {
+            return <Redirect to='/' />
+        }
         return (
             <div style={{ marginTop: 20 }}>
                 <h3>Create New Todo</h3>
