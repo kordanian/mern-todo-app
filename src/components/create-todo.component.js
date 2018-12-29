@@ -8,7 +8,7 @@ export default class CreateToDo extends Component {
 
         this.onChangeTodoDescription = this.onChangeTodoDescription.bind(this);
         this.onChangeTodoResponsible = this.onChangeTodoResponsible.bind(this);
-        this.onChangeTodoPriority = this.onChangeTodoPriority.bind(this);        
+        this.onChangeTodoPriority = this.onChangeTodoPriority.bind(this);
 
         this.state = ({
             todo_description: '',
@@ -69,7 +69,8 @@ export default class CreateToDo extends Component {
     }
 
     render() {
-        if (this.state.isUpdated === true) {
+        let { isUpdated } = this.state;
+        if (isUpdated) {
             return <Redirect to='/' />
         }
         return (
