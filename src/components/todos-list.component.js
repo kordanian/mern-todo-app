@@ -32,6 +32,7 @@ export default class ToDosList extends Component {
         axios.post(`http://localhost:4000/todos/delete/${e.currentTarget.id}`)
             .then(data => {
                 if (data.status === 200) {
+                    window.alert('delete successful');
                     window.location.reload();
                 } else {
                     window.alert(`status ${data.status}`);
