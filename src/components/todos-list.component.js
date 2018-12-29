@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class ToDosList extends Component {
     constructor(props) {
@@ -16,19 +17,11 @@ export default class ToDosList extends Component {
     handleClick = (e) => {
         e.preventDefault();
         console.log('this is:', e);
-        fetch(`http://localhost:4000/todos/delete/${e.currentTarget.id}`, {
-            method: 'post',
-            body: JSON.stringify(this.state),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(function (response) {
-            return response.json();
-        }).then((data) => {
-            console.log(data);
-            window.location.reload();
-        });
+        axios.post(`http://localhost:4000/todos/delete/${e.currentTarget.id}`)
+            .then(data => {
+                console.log(data);
+                window.location.reload();
+            })
     }
 
     render() {
