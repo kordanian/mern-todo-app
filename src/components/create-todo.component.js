@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 export default class CreateToDo extends Component {
 
@@ -40,26 +41,30 @@ export default class CreateToDo extends Component {
         console.log(`Todo Responsible: ${this.state.todo_responsible}`);
         console.log(`Todo Priority: ${this.state.todo_priority}`);
         console.log(`Todo Completed: ${this.state.todo_completed}`);
-
-        fetch('http://localhost:4000/todos/add', {
-            method: 'post',
-            body: JSON.stringify(this.state),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            return response.json();
-        }).then(data => {
-            console.log(data);
-            this.setState({
-                isUpdated: true
+        const todo = {
+            todo_description: this.state.todo_description,
+            todo_responsible: this.state.todo_responsible,
+            todo_priority: this.state.todo_responsible,
+            todo_completed: this.state.todo_completed
+        };
+        axios.post('http://localhost:4000/todos/add', todo)
+            .then(data => {
+                console.log(data);
+                this.setState({ isUpdated: true });
+            })
+            .catch(error => {
+                console.log(error);
             });
-        });
     }
 
     render() {
-        let { isUpdated } = this.state;
+        let { 
+            isUpdated,
+            todo_description,
+            todo_responsible,
+            todo_priority,
+            todo_completed
+         } = this.state;
         if (isUpdated) {
             return <Redirect to='/' />
         }
@@ -73,7 +78,7 @@ export default class CreateToDo extends Component {
                         </label>
                         <input type="text"
                             className="form-control"
-                            value={this.state.todo_description}
+                            value={todo_description}
                             onChange={this.onChangeTodoDescription} />
                     </div>
                     <div className="form-group">
@@ -82,7 +87,7 @@ export default class CreateToDo extends Component {
                         </label>
                         <input type="text"
                             className="form-control"
-                            value={this.state.todo_responsible}
+                            value={todo_responsible}
                             onChange={this.onChangeTodoResponsible} />
                     </div>
                     <div className="form-check form-check-inline">
@@ -91,7 +96,7 @@ export default class CreateToDo extends Component {
                             name="priorityOptions"
                             id="priorityLow"
                             value="Low"
-                            checked={this.state.todo_priority === 'Low'}
+                            checked={todo_priority === 'Low'}
                             onChange={this.onChangeTodoPriority} />
                         <label className="form-check-label">
                             Low
@@ -103,7 +108,7 @@ export default class CreateToDo extends Component {
                             name="priortyOptions"
                             id="priorityMedium"
                             value="Medium"
-                            checked={this.state.todo_priority === 'Medium'}
+                            checked={todo_priority === 'Medium'}
                             onChange={this.onChangeTodoPriority} />
                         <label className="form-check-label">
                             Medium
@@ -115,7 +120,7 @@ export default class CreateToDo extends Component {
                             name="priorityOptions"
                             id="priorityHigh"
                             value="High"
-                            checked={this.state.todo_priority === 'High'}
+                            checked={todo_priority === 'High'}
                             onChange={this.onChangeTodoPriority} />
                         <label className="form-check-label">
                             High
