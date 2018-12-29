@@ -3,12 +3,8 @@ import React, { Component } from 'react';
 export default class CreateToDo extends Component {
 
     constructor(props) {
-        super(props);
-
-        this.onChangeTodoDescription = this.onChangeTodoDescription.bind(this);
-        this.onChangeTodoResponsible = this.onChangeTodoResponsible.bind(this);
-        this.onChangeTodoPriority = this.onChangeTodoPriority.bind(this);        
-
+        super(props);      
+        this.onSubmit = this.onSubmit.bind(this);
         this.state = ({
             todo_description: '',
             todo_responsible: '',
@@ -17,26 +13,27 @@ export default class CreateToDo extends Component {
         })
     }
 
-    onChangeTodoDescription(e) {
+    onChangeTodoDescription = e => {
         this.setState({
             todo_description: e.target.value
         })
     }
 
-    onChangeTodoResponsible(e) {
+    onChangeTodoResponsible = e => {
         this.setState({
             todo_responsible: e.target.value
         })
     }
 
-    onChangeTodoPriority(e) {
+    onChangeTodoPriority = e => {
         this.setState({
             todo_priority: e.target.value
         })
     }
 
-    onSubmit = (e) => {
+    onSubmit(e) {
         e.preventDefault();
+        let that = this;
         console.log(`Form submitted:`);
         console.log(`Todo Description: ${this.state.todo_description}`);
         console.log(`Todo Responsible: ${this.state.todo_responsible}`);
@@ -54,6 +51,7 @@ export default class CreateToDo extends Component {
             return response.json();
         }).then(function (data) {
             console.log(data);
+            that.props.history.push( '/');
         });
         this.setState({
             todo_description: '',
