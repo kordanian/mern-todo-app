@@ -22,19 +22,6 @@ export default class ToDosList extends Component {
                 console.log(data);
                 window.location.reload();
             })
-        // fetch(`http://localhost:4000/todos/delete/${e.currentTarget.id}`, {
-        //     metho`: 'post',
-        //     body: JSON.stringify(this.state),
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     }
-        // }).then(function (response) {
-        //     return response.json();
-        // }).then((data) => {
-        //     console.log(data);
-        //     window.location.reload();
-        // });
     }
 
     render() {
