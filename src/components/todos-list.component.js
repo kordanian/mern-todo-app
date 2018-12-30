@@ -1,23 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const customStyles = {
-    content : {
-      top                   : '50%',
-      left                  : '50%',
-      right                 : 'auto',
-      bottom                : 'auto',
-      marginRight           : '-50%',
-      transform             : 'translate(-50%, -50%)'
-    }
-  };
-
 export default class ToDosList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [],
-            modalIsOpen: false
+            data: []
         };
         fetch('http://localhost:4000/todos')
             .then(response => response.json())
