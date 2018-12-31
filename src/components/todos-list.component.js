@@ -25,7 +25,7 @@ const TodoBullet = props => (
         <br />
         Completed: {props.item.todo_completed.toString()}
         <br />
-        <a id={props.item._id} href="#" name={props.item._id} onClick={(e) => this.handleClick(e)}>
+        <a id={props.item._id} href="#" name={props.item._id} onClick={(e) => props.handleClick(e)}>
             Delete
         </a>
     </li>
@@ -71,7 +71,7 @@ export default class ToDosList extends Component {
     }
     todoListBullet = () => {
         return this.state.data.map((item, i) => {
-            return <TodoBullet item={item} i={i} />;
+            return <TodoBullet item={item} i={i} handleClick={this.handleClick} />;
         });
     }
 
