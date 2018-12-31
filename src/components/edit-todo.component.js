@@ -5,7 +5,6 @@ import axios from 'axios';
 export default class EditToDo extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             todo_description: '',
             todo_responsible: '',
@@ -13,14 +12,25 @@ export default class EditToDo extends Component {
             todo_completed: false,
             isUpdated: false
         }
-        axios.get(`http://localhost:4000/todos/${props.match.params.id}`)
-            .then(data => {
-                if (data) {
+    }
+    componentDidMount() {
+        axios.get(`http://localhost:4000/todos/${this.props.match.params.id}`)
+            .then(response => {
+                if (response) {
                     console.log('there is data');
-                    this.setState(data);
+                    let {
+                        todo_priority,
+                        todo_responsible,
+                        todo_description,
+                        todo_completed
+                    } = response.data;
+                    this.setState({
+                        todo_priority, todo_responsible, todo_description, todo_completed
+                    });
                 }
             }
-        )
+            )
+            .catch(error => { window.alert(error); });
     }
 
     onChangeTodoDescription = e => {

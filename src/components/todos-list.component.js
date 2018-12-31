@@ -1,18 +1,50 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
+const Todo = props => (
+    <tr>
+        <td>{props.todo.todo_description}</td>
+        <td>{props.todo.todo_responsible}</td>
+        <td>{props.todo.todo_priority}</td>
+        <td>
+            <Link to={"/edit/" + props.todo._id}>Edit</Link>
+        </td>
+    </tr>
+)
+const TodoBullet = props => (
+    <li key={props.i}>
+        <a href={'/edit/' + props.item._id} >
+            {props.item.todo_description}
+        </a>
+        <br />
+        Responsible: {props.item.todo_responsible}
+        <br />
+        Priority: {props.item.todo_priority}
+        <br />
+        Completed: {props.item.todo_completed.toString()}
+        <br />
+        <a id={props.item._id} href="#" name={props.item._id} onClick={(e) => this.handleClick(e)}>
+            Delete
+        </a>
+    </li>
+)
 export default class ToDosList extends Component {
     constructor(props) {
         super(props);
         this.state = {
             data: []
         };
-        fetch('http://localhost:4000/todos')
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ data });
+    }
+    componentDidMount() {
+        axios.get('http://localhost:4000/todos')
+            .then(response => {
+                this.setState({ data: response.data });
+            })
+            .catch(error => {
+                window.alert(error);
             });
-    } 
+    }
 
     handleClick = e => {
         e.preventDefault();
@@ -31,31 +63,36 @@ export default class ToDosList extends Component {
                 window.alert(error);
             })
     }
+    todoList = () => {
+        return this.state.data.map((currentTodo, i) => {
+            return <Todo todo={currentTodo} key={i} />;
+        });
+    }
+    todoListBullet  = () => {
+        return this.state.data.map((item, i) => {
+            return <TodoBullet item={item} i={i} />;
+        });
+    }
 
     render() {
         return (
             <div>
-                  <p>Welcome to ToDos List</p>
+                <h3>ToDos List</h3>
+                <table className="table table-striped" style={{ margin: '20px' }}>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Responsible</th>
+                            <th>Priority</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.todoList()}
+                    </tbody>
+                </table>
                 <ul>
-                    {
-                        this.state.data.map((item, i) => {
-                            return <li key={i}>
-                                <a href={'/edit/' + item._id} >
-                                    {item.todo_description}
-                                </a>
-                                <br />
-                                Responsible: {item.todo_responsible}
-                                <br />
-                                Priority: {item.todo_priority}
-                                <br />
-                                Completed: {item.todo_completed.toString()}
-                                <br />
-                                <a id={item._id} href="#" name={item._id} onClick={(e) => this.handleClick(e)}>
-                                    Delete
-                                </a>
-                            </li>
-                        })
-                    }
+                    {this.todoListBullet()}
                 </ul>
             </div>
         )
