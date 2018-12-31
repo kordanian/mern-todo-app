@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 export default class EditToDo extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             todo_description: '',
             todo_responsible: '',
@@ -12,64 +12,79 @@ export default class EditToDo extends Component {
             todo_completed: false,
             isUpdated: false
         }
-        fetch(`http://localhost:4000/todos/${props.match.params.id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data) {
+    }
+    componentDidMount() {
+        axios.get(`http://localhost:4000/todos/${this.props.match.params.id}`)
+            .then(response => {
+                if (response) {
                     console.log('there is data');
-                    this.setState(data);
+                    let {
+                        todo_priority,
+                        todo_responsible,
+                        todo_description,
+                        todo_completed
+                    } = response.data;
+                    this.setState({
+                        todo_priority, todo_responsible, todo_description, todo_completed
+                    });
                 }
-            });
-        this.onChangeTodoDescription = this.onChangeTodoDescription.bind(this);
-        this.onChangeTodoResponsible = this.onChangeTodoResponsible.bind(this);
-        this.onChangeTodoPriority = this.onChangeTodoPriority.bind(this);
+            }
+            )
+            .catch(error => { window.alert(error); });
     }
 
-    onChangeTodoDescription(e) {
+    onChangeTodoDescription = e => {
         this.setState({
             todo_description: e.target.value
         })
     }
 
-    onChangeTodoResponsible(e) {
+    onChangeTodoResponsible = e => {
         this.setState({
             todo_responsible: e.target.value
         })
     }
 
-    onChangeTodoPriority(e) {
+    onChangeTodoPriority = e => {
         this.setState({
             todo_priority: e.target.value
         })
     }
 
-    onSubmit = (e) => {
+    onSubmit = e => {
         e.preventDefault();
         console.log(`Form submitted:`);
         console.log(`Todo Description: ${this.state.todo_description}`);
         console.log(`Todo Responsible: ${this.state.todo_responsible}`);
         console.log(`Todo Priority: ${this.state.todo_priority}`);
         console.log(`Todo Completed: ${this.state.todo_completed}`);
-
-        fetch(`http://localhost:4000/todos/update/${this.props.match.params.id}`, {
-            method: 'post',
-            body: JSON.stringify(this.state),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(function (response) {
-            return response.json();
-        }).then((data) => {
-            console.log(data);
-            this.setState({
-                isUpdated: true
+        const todo = {
+            todo_description: this.state.todo_description,
+            todo_responsible: this.state.todo_responsible,
+            todo_priority: this.state.todo_responsible,
+            todo_completed: this.state.todo_completed
+        };
+        axios.post(`http://localhost:4000/todos/update/${this.props.match.params.id}`, todo)
+            .then(data => {
+                if (data.status === '200') {
+                    console.log(data);
+                    this.setState({ isUpdated: true });
+                }
             })
-        });
+            .catch(error => {
+                console.log(error);
+            });
     }
 
     render() {
-        if (this.state.isUpdated === true) {
+        let {
+            isUpdated,
+            todo_priority,
+            todo_responsible,
+            todo_description,
+            todo_completed
+        } = this.state;
+        if (isUpdated) {
             return <Redirect to='/' />
         }
         return (
@@ -82,7 +97,7 @@ export default class EditToDo extends Component {
                         </label>
                         <input type="text"
                             className="form-control"
-                            value={this.state.todo_description}
+                            value={todo_description}
                             onChange={this.onChangeTodoDescription} />
                     </div>
                     <div className="form-group">
@@ -91,7 +106,7 @@ export default class EditToDo extends Component {
                         </label>
                         <input type="text"
                             className="form-control"
-                            value={this.state.todo_responsible}
+                            value={todo_responsible}
                             onChange={this.onChangeTodoResponsible} />
                     </div>
                     <div className="form-check form-check-inline">
@@ -100,7 +115,7 @@ export default class EditToDo extends Component {
                             name="priorityOptions"
                             id="priorityLow"
                             value="Low"
-                            checked={this.state.todo_priority === 'Low'}
+                            checked={todo_priority === 'Low'}
                             onChange={this.onChangeTodoPriority} />
                         <label className="form-check-label">
                             Low
@@ -112,7 +127,7 @@ export default class EditToDo extends Component {
                             name="priortyOptions"
                             id="priorityMedium"
                             value="Medium"
-                            checked={this.state.todo_priority === 'Medium'}
+                            checked={todo_priority === 'Medium'}
                             onChange={this.onChangeTodoPriority} />
                         <label className="form-check-label">
                             Medium
@@ -124,7 +139,7 @@ export default class EditToDo extends Component {
                             name="priorityOptions"
                             id="priorityHigh"
                             value="High"
-                            checked={this.state.todo_priority === 'High'}
+                            checked={todo_priority === 'High'}
                             onChange={this.onChangeTodoPriority} />
                         <label className="form-check-label">
                             High
