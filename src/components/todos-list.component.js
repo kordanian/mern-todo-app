@@ -48,8 +48,7 @@ export default class ToDosList extends Component {
     }
 
     handleClick = e => {
-        e.preventDefault();
-        let that = this;
+        e.preventDefault();       
         axios.post(`http://localhost:4000/todos/delete/${e.currentTarget.id}`)
             .then(data => {
                 if (data.status === 200) {
