@@ -8,7 +8,8 @@ const Todo = props => (
         <td>{props.todo.todo_responsible}</td>
         <td>{props.todo.todo_priority}</td>
         <td>
-            <Link to={"/edit/" + props.todo._id}>Edit</Link>
+            <Link to={"/edit/" + props.todo._id}>Edit</Link>   |
+            {' '}<Link id={props.todo._id} to="#" onClick={(e) => props.handleClick(e)}>Delete</Link>
         </td>
     </tr>
 )
@@ -24,7 +25,7 @@ const TodoBullet = props => (
         <br />
         Completed: {props.item.todo_completed.toString()}
         <br />
-        <a id={props.item._id} href="#" name={props.item._id} onClick={(e) => this.handleClick(e)}>
+        <a id={props.item._id} href="#" name={props.item._id} onClick={(e) => props.handleClick(e)}>
             Delete
         </a>
     </li>
@@ -65,12 +66,12 @@ export default class ToDosList extends Component {
     }
     todoList = () => {
         return this.state.data.map((currentTodo, i) => {
-            return <Todo todo={currentTodo} key={i} />;
+            return <Todo todo={currentTodo} key={i} handleClick={this.handleClick} />;
         });
     }
-    todoListBullet  = () => {
+    todoListBullet = () => {
         return this.state.data.map((item, i) => {
-            return <TodoBullet item={item} i={i} />;
+            return <TodoBullet item={item} i={i} handleClick={this.handleClick} />;
         });
     }
 
