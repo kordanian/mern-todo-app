@@ -51,6 +51,16 @@ export default class EditToDo extends Component {
         })
     }
 
+    onChangeTodoCompleted = event => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+    
+        this.setState({
+          [name]: value
+        });
+      }    
+
     onSubmit = e => {
         e.preventDefault();
         console.log(`Form submitted:`);
@@ -61,14 +71,17 @@ export default class EditToDo extends Component {
         const todo = {
             todo_description: this.state.todo_description,
             todo_responsible: this.state.todo_responsible,
-            todo_priority: this.state.todo_responsible,
+            todo_priority: this.state.todo_priority,
             todo_completed: this.state.todo_completed
         };
         axios.post(`http://localhost:4000/todos/update/${this.props.match.params.id}`, todo)
             .then(data => {
-                if (data.status === '200') {
-                    console.log(data);
+                if (data.status === 200) {
+                    console.log(data.status);
                     this.setState({ isUpdated: true });
+                } else {
+                    console.log(data.status);
+                    window.alert(data.status);
                 }
             })
             .catch(error => {
@@ -145,7 +158,18 @@ export default class EditToDo extends Component {
                             High
                         </label>
                     </div>
-                    <div className="form-group">
+                    <div className="form-check" style={{marginTop:'10px'}}>
+                        <input
+                            name="todo_completed"
+                            type="checkbox"
+                            className="form-check-input"
+                            id="exampleCheck1"
+                            checked={todo_completed}
+                            onChange={this.onChangeTodoCompleted}
+                        />
+                        <label className="form-check-label" htmlFor="exampleCheck1">Completed</label>
+                    </div>
+                    <div className="form-group" style={{marginTop:'20px'}}>
                         <input
                             type="submit"
                             value="update todo"

@@ -9,7 +9,17 @@ const Todo = props => (
         <td>{props.todo.todo_priority}</td>
         <td>
             <Link to={"/edit/" + props.todo._id}>Edit</Link>   |
-            {' '}<Link id={props.todo._id} to="#" onClick={(e) => props.handleClick(e)}>Delete</Link>
+            {' '}<Link id={props.todo._id} to="#" onClick={props.handleClick}>Delete</Link>
+        </td>
+        <td>
+            <input
+                name="todo_completed"
+                type="checkbox"
+                className="form-check-input"
+                id={props.todo._id}
+                checked={props.todo.todo_completed}
+                onChange={props.onChangeTodoCompleted}
+            />
         </td>
     </tr>
 )
@@ -46,9 +56,32 @@ export default class ToDosList extends Component {
                 window.alert(error);
             });
     }
+    handleCheck = (e, key) => {
+        e.preventDefault();
+        const todo = {
+            todo_description: this.state.data[key].todo_description,
+            todo_responsible: this.state.data[key].todo_responsible,
+            todo_priority: this.state.data[key].todo_priority,
+            todo_completed: this.state.data[key].todo_completed
+        };
+        console.log(todo);
+        axios.post(`http://localhost:4000/todos/update/${e.currentTarget.id}`, todo)
+            .then(data => {
+                if (data.status === 200) {
+                    console.log(data.status);
+                    this.setState({ isUpdated: true });
+                } else {
+                    console.log(data.status);
+                    window.alert(data.status);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
     handleClick = e => {
-        e.preventDefault();       
+        e.preventDefault();
         axios.post(`http://localhost:4000/todos/delete/${e.currentTarget.id}`)
             .then(data => {
                 if (data.status === 200) {
@@ -63,14 +96,26 @@ export default class ToDosList extends Component {
                 window.alert(error);
             })
     }
+
+    onChangeTodoCompleted = (event, key) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        let { data } = this.state;
+        data[key].todo_completed = value;
+        this.setState({
+            data
+        })
+        this.handleCheck(event, key);
+    }
+
     todoList = () => {
         return this.state.data.map((currentTodo, i) => {
-            return <Todo todo={currentTodo} key={i} handleClick={this.handleClick} />;
+            return <Todo todo={currentTodo} key={i} handleClick={this.handleClick} onChangeTodoCompleted={e => this.onChangeTodoCompleted(e, i)} />;
         });
     }
     todoListBullet = () => {
         return this.state.data.map((item, i) => {
-            return <TodoBullet item={item} i={i} handleClick={this.handleClick} />;
+            return <TodoBullet item={item} key={i} handleClick={this.handleClick} />;
         });
     }
 
@@ -85,6 +130,7 @@ export default class ToDosList extends Component {
                             <th>Responsible</th>
                             <th>Priority</th>
                             <th>Actions</th>
+                            <th>Completed</th>
                         </tr>
                     </thead>
                     <tbody>
